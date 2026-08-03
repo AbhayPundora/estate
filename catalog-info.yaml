@@ -1,9 +1,9 @@
 apiVersion: backstage.io/v1alpha1
-kind: System
+kind: Component
 metadata:
-  name: full-stack-estate
+  name: estate
   title: Full Stack Estate
-  description: A full-stack real estate listing platform where users can browse, post, and save property listings (buy/rent), with real-time chat between users.
+  description: A full-stack real estate listing platform where users can browse, post, and save property listings (buy or rent), with real-time chat between users.
   tags:
     - real-estate
     - fullstack
@@ -13,47 +13,6 @@ metadata:
     - url: https://github.com/AbhayPundora/estate
       title: GitHub Repository
       icon: github
-spec:
-  owner: group:estate-team
-  domain: real-estate
-
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: estate-api
-  title: Estate REST API
-  description: Express.js REST API backend for the Estate platform. Handles authentication, property posts, saved listings, and real-time chat via Socket.IO. Uses Prisma ORM with PostgreSQL.
-  tags:
-    - nodejs
-    - express
-    - prisma
-    - postgresql
-    - jwt
-  annotations:
-    github.com/project-slug: AbhayPundora/estate
-    backstage.io/techdocs-ref: dir:.
-spec:
-  type: service
-  lifecycle: development
-  owner: group:estate-team
-  system: full-stack-estate
-  providesApis:
-    - estate-api-v1
-
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: estate-ui
-  title: Estate Frontend
-  description: React + Vite frontend for the Estate platform. Allows users to search listings on an interactive Leaflet map, view property details, chat in real-time, and manage their profile.
-  tags:
-    - react
-    - vite
-    - leaflet
-    - zustand
-    - sass
   annotations:
     github.com/project-slug: AbhayPundora/estate
 spec:
@@ -61,82 +20,7 @@ spec:
   lifecycle: development
   owner: group:estate-team
   system: full-stack-estate
-  consumesApis:
-    - estate-api-v1
   dependsOn:
     - component:estate-api
-
----
-apiVersion: backstage.io/v1alpha1
-kind: API
-metadata:
-  name: estate-api-v1
-  title: Estate API v1
-  description: |
-    REST API for the Full Stack Estate platform.
-
-    **Auth** — register, login, logout (JWT via cookies)
-    **Posts** — list, filter, get single, create, update, delete property listings
-    **Users** — get/update profile, save/unsave posts
-    **Chat** — create chat, list chats, get single chat
-    **Messages** — add a message to a chat
-  tags:
-    - rest
-    - jwt
-    - real-estate
-spec:
-  type: openapi
-  lifecycle: development
-  owner: group:estate-team
-  system: full-stack-estate
-  definition: |
-    openapi: "3.0.0"
-    info:
-      title: Estate API
-      version: "1.0.0"
-    paths:
-      /api/auth/register:
-        post:
-          summary: Register a new user
-      /api/auth/login:
-        post:
-          summary: Login and receive JWT cookie
-      /api/auth/logout:
-        post:
-          summary: Logout and clear cookie
-      /api/posts:
-        get:
-          summary: List / filter posts
-        post:
-          summary: Create a new post (auth required)
-      /api/posts/{id}:
-        get:
-          summary: Get a single post
-        put:
-          summary: Update a post (auth required)
-        delete:
-          summary: Delete a post (auth required)
-      /api/users/{id}:
-        get:
-          summary: Get user profile (auth required)
-        put:
-          summary: Update user profile (auth required)
-        delete:
-          summary: Delete user (auth required)
-      /api/users/save:
-        post:
-          summary: Save or unsave a post (auth required)
-      /api/users/profilePosts:
-        get:
-          summary: Get own posts and saved posts (auth required)
-      /api/chats:
-        get:
-          summary: Get all chats for current user (auth required)
-        post:
-          summary: Create or retrieve a chat (auth required)
-      /api/chats/{id}:
-        get:
-          summary: Get a single chat with messages (auth required)
-      /api/messages/{chatId}:
-        post:
-          summary: Add a message to a chat (auth required)
+  consumesApis:
+    - estate-api
