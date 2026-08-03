@@ -21,7 +21,5 @@ spec:
   lifecycle: development
   owner: group:estate-team
   system: full-stack-estate
-  dependsOn:
-    - component:estate-api
   consumesApis:
     - estate-api
