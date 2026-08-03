@@ -15,6 +15,7 @@ metadata:
       icon: github
   annotations:
     github.com/project-slug: AbhayPundora/estate
+    backstage.io/techdocs-ref: dir:./service_with_docs
 spec:
   type: website
   lifecycle: development
