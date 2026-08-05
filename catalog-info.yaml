@@ -1,25 +1,13 @@
 apiVersion: backstage.io/v1alpha1
-kind: Component
+kind: Location
 metadata:
-  name: estate
-  title: Full Stack Estate
-  description: A full-stack real estate listing platform where users can browse, post, and save property listings (buy or rent), with real-time chat between users.
-  tags:
-    - real-estate
-    - fullstack
-    - react
-    - nodejs
-  links:
-    - url: https://github.com/AbhayPundora/estate
-      title: GitHub Repository
-      icon: github
-  annotations:
-    github.com/project-slug: AbhayPundora/estate
-    backstage.io/techdocs-ref: dir:./service_with_docs
+  name: estate-catalog
+  title: Estate Platform Catalog
+  description: Root catalog that references all Estate platform entities.
 spec:
-  type: website
-  lifecycle: development
-  owner: group:estate-team
-  system: full-stack-estate
-  consumesApis:
-    - estate-api
+  targets:
+    - ./client/catalog-info.yaml
+    - ./api/catalog-info.yaml
+    - ./openapi.yaml
+    - ./system.yaml
+    - ./group.yaml
