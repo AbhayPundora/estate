@@ -1,10 +1,13 @@
 apiVersion: backstage.io/v1alpha1
-kind: Component
+kind: Location
 metadata:
-  name: estate
-  annotations:
-    github.com/project-slug: AbhayPundora/estate
+  name: estate-catalog
+  title: Estate Platform Catalog
+  description: Root catalog that references all Estate platform entities.
 spec:
-  type: other
-  lifecycle: unknown
-  owner: estateadmins
+  targets:
+    - ./client/catalog-info.yaml
+    - ./api/catalog-info.yaml
+    - ./openapi.yaml
+    - ./system.yaml
+    - ./group.yaml

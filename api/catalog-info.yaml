@@ -1,0 +1,23 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: estate-backend
+  title: Estate Backend Service
+  description: Express.js REST API backend for the Estate platform. Handles authentication, property posts, saved listings, and real-time chat. Uses Prisma ORM with PostgreSQL.
+  tags:
+    - nodejs
+    - express
+    - prisma
+    - postgresql
+    - jwt
+  annotations:
+    github.com/project-slug: AbhayPundora/estate
+    backstage.io/techdocs-ref: dir:../docs
+    backstage.io/source-location: url:https://github.com/AbhayPundora/estate/tree/main/api
+spec:
+  type: service
+  lifecycle: development
+  owner: group:estate-team
+  system: full-stack-estate
+  providesApis:
+    - estate-api
