@@ -38,3 +38,6 @@ The API runs on `http://localhost:8800` by default.
 |----------------|------------------------------------|
 | `DATABASE_URL` | PostgreSQL connection string       |
 | `JWT_SECRET_KEY` | Secret used to sign JWT tokens   |
+
+
+# adding a comment
