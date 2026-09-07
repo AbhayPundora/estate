@@ -1,12 +1,366 @@
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: artist-api
-  description: Retrieve artist details
+  name: estate-api
+  title: Estate REST API
+  description: |
+    REST API for the Full Stack Estate platform.
+    Handles authentication, property listings, saved posts, and real-time chat.
+  tags:
+    - rest
+    - jwt
+    - real-estate
 spec:
   type: openapi
-  lifecycle: production
-  owner: artist-relations-team
-  system: artist-engagement-portal
-  definition:
-    $text: 'https://gist.githubusercontent.com/lenage/08964335de9064540c8c335fb849c5da/raw/6d63e3546897356882ed7e30cd48891a24e2b354/feature.swagger.json'
+  lifecycle: development
+  owner: group:estate-team
+  system: full-stack-estate
+  definition: |
+    openapi: "3.0.0"
+    info:
+      title: Estate API
+      version: "1.0.0"
+      description: REST API for the Full Stack Estate platform
+    servers:
+      - url: http://localhost:8800
+    tags:
+      - name: auth
+        description: Authentication endpoints
+      - name: posts
+        description: Property listing endpoints
+      - name: users
+        description: User profile and saved posts
+      - name: chats
+        description: Real-time chat
+      - name: messages
+        description: Chat messages
+    paths:
+      /api/auth/register:
+        post:
+          tags: [auth]
+          summary: Register a new user
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  required: [username, email, password]
+                  properties:
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    password:
+                      type: string
+          responses:
+            "201":
+              description: User created successfully
+            "400":
+              description: Validation error or user already exists
+      /api/auth/login:
+        post:
+          tags: [auth]
+          summary: Login and receive JWT cookie
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  required: [username, password]
+                  properties:
+                    username:
+                      type: string
+                    password:
+                      type: string
+          responses:
+            "200":
+              description: Login successful, JWT set in cookie
+            "400":
+              description: Invalid credentials
+      /api/auth/logout:
+        post:
+          tags: [auth]
+          summary: Logout and clear JWT cookie
+          responses:
+            "200":
+              description: Logged out successfully
+      /api/posts:
+        get:
+          tags: [posts]
+          summary: List and filter property posts
+          parameters:
+            - in: query
+              name: city
+              schema:
+                type: string
+            - in: query
+              name: type
+              schema:
+                type: string
+                enum: [buy, rent]
+            - in: query
+              name: property
+              schema:
+                type: string
+                enum: [apartment, house, condo, land]
+            - in: query
+              name: bedroom
+              schema:
+                type: integer
+            - in: query
+              name: minPrice
+              schema:
+                type: integer
+            - in: query
+              name: maxPrice
+              schema:
+                type: integer
+          responses:
+            "200":
+              description: List of posts
+        post:
+          tags: [posts]
+          summary: Create a new post (auth required)
+          security:
+            - cookieAuth: []
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  required: [title, price, address, city, bedroom, bathroom, latitude, longitude, type, property]
+                  properties:
+                    title:
+                      type: string
+                    price:
+                      type: integer
+                    images:
+                      type: array
+                      items:
+                        type: string
+                    address:
+                      type: string
+                    city:
+                      type: string
+                    bedroom:
+                      type: integer
+                    bathroom:
+                      type: integer
+                    latitude:
+                      type: string
+                    longitude:
+                      type: string
+                    type:
+                      type: string
+                      enum: [buy, rent]
+                    property:
+                      type: string
+                      enum: [apartment, house, condo, land]
+          responses:
+            "201":
+              description: Post created
+            "401":
+              description: Unauthorized
+      /api/posts/{id}:
+        get:
+          tags: [posts]
+          summary: Get a single post with full details
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            "200":
+              description: Post details
+            "404":
+              description: Post not found
+        put:
+          tags: [posts]
+          summary: Update a post (auth required, owner only)
+          security:
+            - cookieAuth: []
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            "200":
+              description: Post updated
+            "403":
+              description: Forbidden
+        delete:
+          tags: [posts]
+          summary: Delete a post (auth required, owner only)
+          security:
+            - cookieAuth: []
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            "200":
+              description: Post deleted
+            "403":
+              description: Forbidden
+      /api/users/{id}:
+        get:
+          tags: [users]
+          summary: Get a user profile (auth required)
+          security:
+            - cookieAuth: []
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            "200":
+              description: User profile
+        put:
+          tags: [users]
+          summary: Update user profile (auth required)
+          security:
+            - cookieAuth: []
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            "200":
+              description: Profile updated
+        delete:
+          tags: [users]
+          summary: Delete account (auth required)
+          security:
+            - cookieAuth: []
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            "200":
+              description: Account deleted
+      /api/users/save:
+        post:
+          tags: [users]
+          summary: Save or unsave a post (auth required)
+          security:
+            - cookieAuth: []
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  required: [postId]
+                  properties:
+                    postId:
+                      type: string
+          responses:
+            "200":
+              description: Post saved or unsaved
+      /api/users/profilePosts:
+        get:
+          tags: [users]
+          summary: Get current user posts and saved posts (auth required)
+          security:
+            - cookieAuth: []
+          responses:
+            "200":
+              description: User posts and saved posts
+      /api/users/notification:
+        get:
+          tags: [users]
+          summary: Get unread chat notification count (auth required)
+          security:
+            - cookieAuth: []
+          responses:
+            "200":
+              description: Notification count
+      /api/chats:
+        get:
+          tags: [chats]
+          summary: Get all chats for current user (auth required)
+          security:
+            - cookieAuth: []
+          responses:
+            "200":
+              description: List of chats
+        post:
+          tags: [chats]
+          summary: Create or retrieve an existing chat (auth required)
+          security:
+            - cookieAuth: []
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  required: [receiverId]
+                  properties:
+                    receiverId:
+                      type: string
+          responses:
+            "200":
+              description: Chat object
+      /api/chats/{id}:
+        get:
+          tags: [chats]
+          summary: Get a single chat with all messages (auth required)
+          security:
+            - cookieAuth: []
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            "200":
+              description: Chat with messages
+      /api/messages/{chatId}:
+        post:
+          tags: [messages]
+          summary: Add a message to a chat (auth required)
+          security:
+            - cookieAuth: []
+          parameters:
+            - in: path
+              name: chatId
+              required: true
+              schema:
+                type: string
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  required: [text]
+                  properties:
+                    text:
+                      type: string
+          responses:
+            "200":
+              description: Message created
+    components:
+      securitySchemes:
+        cookieAuth:
+          type: apiKey
+          in: cookie
+          name: token

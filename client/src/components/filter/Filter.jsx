@@ -21,7 +21,7 @@ function Filter() {
   };
 
   const handleFilter = () => {
-    setSearchParams(query);
+    setSearchParams({ city: query.city });
   };
 
   return (
@@ -74,7 +74,7 @@ function Filter() {
         <div className="item">
           <label htmlFor="minPrice">Min Price</label>
           <input
-            type="number"
+            type="text"
             id="minPrice"
             name="minPrice"
             placeholder="any"

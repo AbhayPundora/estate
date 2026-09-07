@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: estate-frontend
+  title: Estate Frontend (React)
+  description: React-based frontend for the Estate platform. Users can browse, post, and save property listings (buy or rent), with real-time chat.
+  tags:
+    - real-estate
+    - react
+    - scss
+    - frontend
+  links:
+    - url: https://github.com/AbhayPundora/estate
+      title: GitHub Repository
+      icon: github
+  annotations:
+    github.com/project-slug: AbhayPundora/estate
+    backstage.io/source-location: url:https://github.com/AbhayPundora/estate/tree/main/client
+spec:
+  type: website
+  lifecycle: development
+  owner: group:estate-team
+  system: full-stack-estate
+  consumesApis:
+    - estate-api

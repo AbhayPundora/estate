@@ -1,14 +1,27 @@
 apiVersion: backstage.io/v1alpha1
 kind: Group
 metadata:
-  name: estateadmins
-  description: The infra business unit
+  name: estate-team
+  title: Estate Team
+  description: Developers building the Full Stack Estate platform
 spec:
   type: team
   profile:
-    displayName: Infrastructure
-    email: infrastructure@example.com
-    picture: https://example.com/groups/bu-infrastructure.jpeg
-  parent: ops
-  children: [backstage, other]
-  members: [jdoe]
+    displayName: Estate Team
+    email: estate-team@example.com
+  children: []
+  members:
+    - abhay
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: abhay
+  title: Abhay Pundora
+spec:
+  profile:
+    displayName: Abhay Pundora
+    email: abhay@example.com
+  memberOf:
+    - estate-team
