@@ -96,3 +96,6 @@ Relations: many-to-many with `User`, has many `Message`
 | userId    | String   | Sender's user ID     |
 | chatId    | String   | FK → Chat            |
 | createdAt | DateTime | Auto-set             |
+
+
+# added
