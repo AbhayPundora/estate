@@ -59,7 +59,7 @@ export const login = async (req, res) => {
         id: user.id,
         isAdmin: false,
       },
-      process.env.JWT_SECRET_KEY,
+      process.env.JWT_SECRET_KEY || "estate-jwt-secret-demo-123456",
       { expiresIn: age }
     );
 
@@ -75,7 +75,7 @@ export const login = async (req, res) => {
       .json(userInfo);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to login!" });
+    res.status(500).json({ message: err.message });
   }
 };
 
